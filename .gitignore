@@ -1,1 +1,6 @@
+# Obsidian editor config
 .obsidian/
+
+# Node / npm
+node_modules
+
