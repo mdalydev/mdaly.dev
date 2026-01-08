@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog — Markham Daly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --bg: #5f6367; --bg2:#565a5e; --bg3:#6a6e72;
+      --text:#f3eadb; --muted: rgba(243,234,219,0.78); --accent: rgba(243,234,219,0.92);
+      --max: 980px;
+      --line: rgba(243,234,219,0.22);
+    }
+    body{
+      margin:0; color:var(--text);
+      background:
+        radial-gradient(1100px 520px at 50% -10%, rgba(255,255,255,0.10), transparent 55%),
+        radial-gradient(900px 500px at 20% 10%, rgba(255,255,255,0.06), transparent 58%),
+        linear-gradient(180deg, var(--bg3), var(--bg2) 40%, var(--bg));
+      font-family:"Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height:1.65; letter-spacing:0.2px;
+    }
+    header{
+      position:sticky; top:0; z-index:20;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+    }
+    .nav-wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px;
+      display:flex; justify-content:center; align-items:center; gap:18px;
+    }
+    .nav-link{
+      color: var(--muted);
+      text-decoration:none;
+      font-size:0.98rem;
+      padding:6px 2px;
+      position:relative;
+      transition: color 140ms ease, transform 140ms ease;
+    }
+    .nav-link::after{
+      content:"";
+      position:absolute; left:0; bottom:-6px;
+      width:100%; height:1px;
+      background: rgba(243,234,219,0.0);
+      transform: scaleX(0);
+      transform-origin:center;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+    .nav-link:hover{
+      color: var(--accent);
+      transform: translateY(-1px);
+      text-shadow: 0 0 18px rgba(243,234,219,0.18);
+    }
+    .nav-link:hover::after{
+      transform: scaleX(1);
+      background: rgba(243,234,219,0.65);
+    }
+    .sep{ color: rgba(243,234,219,0.40); user-select:none; transform: translateY(-1px); }
+
+    main{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 68px 18px 40px;
+      text-align:center;
+    }
+    h1{ margin:0; font-size: clamp(2.0rem, 3.0vw, 2.8rem); font-weight:650; }
+    p{ margin: 14px auto 0; max-width: 70ch; color: var(--muted); }
+
+    .postlist{
+      margin: 28px auto 0;
+      max-width: 720px;
+      text-align:left;
+    }
+    .post{
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .post:last-child{ border-bottom:none; }
+    .post a{ color: var(--accent); text-decoration:none; }
+    .post a:hover{ text-decoration: underline; }
+
+    footer{
+      max-width: var(--max);
+      margin:0 auto;
+      padding: 22px 18px 44px;
+      text-align:center;
+      font-size:0.85rem;
+    }
+    footer a{
+      color: rgba(243,234,219,0.52);
+      text-decoration:none;
+      transition: color 140ms ease, text-shadow 140ms ease;
+    }
+    footer a:hover{
+      color: rgba(243,234,219,0.78);
+      text-shadow: 0 0 16px rgba(243,234,219,0.18);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a class="nav-link" href="/">Home</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/markham_daly.pdf" target="_blank" rel="noopener">Resume</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/blog/">Blog</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Blog</h1>
+    <p>Home lab build notes, parts, setup decisions, and what I’m learning along the way.</p>
+
+    <div class="postlist">
+      <div class="post">
+        <div><a href="#">Coming soon: Home lab goals + parts list</a></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- If you created /mitty/ (full-screen page), this link is perfect.
+       If you did NOT create /mitty/, change href to "/mitty.jpg" instead. -->
+  <footer>
+    <a href="/mitty/" target="_blank" rel="noopener">© <span id="year"></span> Markham Daly</a>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
