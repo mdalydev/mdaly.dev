@@ -1,5 +1,5 @@
 ---
-title: blog title
+title: First Post
 date: 1/7/2026
 ---
 
