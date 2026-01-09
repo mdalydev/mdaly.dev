@@ -9,6 +9,8 @@ content/drafts/
 
 # Syncthing folder
 .stfolder
+.stversions/
 
 # For when I work on my Mac
 .localized
+.DS_Store
