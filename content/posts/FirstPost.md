@@ -11,3 +11,5 @@ This is my first official post, aimed at testing if the blog functionality will 
 Thank you!
 
 edited 1/8/2026 to add a description section.
+
+![Test Image!](/blog/images/testimage.png)
