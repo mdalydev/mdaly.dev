@@ -4,3 +4,11 @@
 # Node / npm
 node_modules
 
+# No Peeking! Draft Posts
+content/drafts/
+
+# Syncthing folder
+.stfolder
+
+# For when I work on my Mac
+.localized
