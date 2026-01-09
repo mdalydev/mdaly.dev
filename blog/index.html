@@ -69,42 +69,61 @@
     h1{ margin:0; font-size: clamp(2.0rem, 3.0vw, 2.8rem); font-weight:650; }
     p{ margin: 14px auto 0; max-width: 70ch; color: var(--muted); }
 
-    .postlist{
-      margin: 28px auto 0;
-      max-width: 720px;
-      text-align:left;
-    }
-    .post{
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .post:last-child{ border-bottom:none; }
+      .postlist{
+  margin: 32px auto 0;
+  max-width: 760px;
+  text-align: center;       
+}
 
-    .post a{ color: var(--accent); text-decoration:none; font-size: 1.05rem; }
-    .post a:hover{ text-decoration: underline; }
+.post{
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
 
-    .meta{
-      margin-top: 6px;
-      color: rgba(243,234,219,0.58);
-      font-size: 0.9rem;
-    }
+.post a{
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.post a:hover{ text-decoration: underline; }
+
+.post .meta{
+  margin-top: 6px;
+  color: rgba(243,234,219,0.58);
+  font-size: 0.9rem;
+}
+
+.post .desc{
+  margin-top: 10px;
+  color: rgba(243,234,219,0.78);
+  font-size: 0.98rem;
+  max-width: 62ch;
+  margin-left: auto;
+  margin-right: auto;
+}
 
     footer{
-      max-width: var(--max);
-      margin:0 auto;
-      padding: 22px 18px 44px;
-      text-align:center;
-      font-size:0.85rem;
-    }
-    footer a{
-      color: rgba(243,234,219,0.52);
-      text-decoration:none;
-      transition: color 140ms ease, text-shadow 140ms ease;
-    }
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 10px 18px 14px;  
+  text-align: center;
+  font-size: 0.82rem;
+  line-height: 1.2;         
+}
+
+footer a{
+  color: rgba(243,234,219,0.52);
+  text-decoration: none;
+  display: inline-block;    
+  padding: 2px 0;
+}
     footer a:hover{
       color: rgba(243,234,219,0.78);
       text-shadow: 0 0 16px rgba(243,234,219,0.18);
     }
+  
+
   </style>
 </head>
 
@@ -127,6 +146,7 @@
       <div class="post">
   <div><a href="/blog/firstpost/">First Post</a></div>
   <div class="meta">1/7/2026</div>
+  
 </div>
     </div>
   </main>

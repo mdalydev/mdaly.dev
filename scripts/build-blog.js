@@ -26,7 +26,6 @@ function parseFrontmatter(raw) {
 }
 
 function slugFromFilename(filename) {
-  // "2026-01-08-firstpost.md" -> "firstpost"
   return filename
     .replace(/^\d{4}-\d{2}-\d{2}-/, "")
     .replace(/\.md$/i, "")
@@ -79,24 +78,27 @@ function main() {
     fs.writeFileSync(path.join(outDir, "index.html"), html);
     console.log(`Built: /blog/${slug}/`);
 
-    posts.push({ title, date, slug });
+     posts.push({ title, date, slug, description: meta.description || "" });
+
   }
 
   // newest first (works well with YYYY-MM-DD)
   posts.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 
-  const postsHtml =
-    posts.length === 0
-      ? `<div class="post"><div style="color: rgba(243,234,219,0.78);">No posts yet.</div></div>`
-      : posts
-          .map(
-            p => `
+ const postsHtml =
+  posts.length === 0
+    ? `<div class="post"><div style="color: rgba(243,234,219,0.78);">No posts yet.</div></div>`
+    : posts
+        .map(
+          p => `
 <div class="post">
   <div><a href="/blog/${p.slug}/">${escapeHtml(p.title)}</a></div>
   <div class="meta">${escapeHtml(p.date || "")}</div>
+  ${p.description ? `<div class="desc">${escapeHtml(p.description)}</div>` : ""}
 </div>`.trim()
-          )
-          .join("\n");
+        )
+        .join("\n");
+
 
   const blogIndexHtml = blogIndexTemplate.replace("{{POSTS}}", postsHtml);
   fs.writeFileSync(path.join(BLOG_DIR, "index.html"), blogIndexHtml);
