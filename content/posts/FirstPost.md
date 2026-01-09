@@ -1,7 +1,7 @@
 ---
 title: First Post
 date: 1/7/2026
-discription: Initial testing post!
+description: Initial testing post!
 ---
 
 Hello world.
