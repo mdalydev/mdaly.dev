@@ -1,6 +1,6 @@
 ---
 title: First Post
-date: 1/7/2026
+date: 2026/01/07
 description: Initial testing post!
 ---
 

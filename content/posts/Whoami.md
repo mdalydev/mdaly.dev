@@ -1,6 +1,6 @@
 ---
 title: Whoami
-date: 1/14/2026
+date: 2026/01/14
 description: Brief introduction to myself + the blog
 ---
 Hello reader, I'm going to quickly introduce myself and the purpose of the blog. 
