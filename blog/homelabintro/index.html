@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home Lab Intro — Markham Daly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg: #5f6367;
+      --bg2: #565a5e;
+      --bg3: #6a6e72;
+
+      --text: #f3eadb;
+      --muted: rgba(243,234,219,0.78);
+      --accent: rgba(243,234,219,0.92);
+      --line: rgba(243,234,219,0.22);
+
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      color: var(--text);
+
+      background: var(--bg);
+
+      font-family: "Avenir Next", Avenir, "SF Pro Display", -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0.2px;
+
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+
+      position: relative;
+      isolation: isolate;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+
+      background:
+        radial-gradient(1600px 900px at 50% -30%, rgba(255,255,255,0.06), transparent 70%),
+        radial-gradient(1400px 900px at 80% 20%, rgba(255,255,255,0.04), transparent 72%);
+      opacity: 0.95;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(243,234,219,0.10);
+    }
+
+    .nav-wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .nav-link{
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.98rem;
+      padding: 6px 2px;
+      position: relative;
+      transition: color 140ms ease, transform 140ms ease;
+    }
+
+    .nav-link::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 1px;
+      background: rgba(243,234,219,0.0);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .nav-link:hover{
+      color: var(--accent);
+      transform: translateY(-1px);
+      text-shadow: 0 0 18px rgba(243,234,219,0.18);
+    }
+
+    .nav-link:hover::after{
+      transform: scaleX(1);
+      background: rgba(243,234,219,0.65);
+    }
+
+    .sep{
+      color: rgba(243,234,219,0.40);
+      user-select: none;
+      transform: translateY(-1px);
+    }
+
+    main{
+      flex: 1; 
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 74px 18px 46px;
+      text-align: center;
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(2.0rem, 3.2vw, 3.0rem);
+      font-weight: 650;
+      letter-spacing: 0.3px;
+    }
+
+    .meta{
+      margin: 12px auto 0;
+      color: rgba(243,234,219,0.70);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .divider{
+      width: 84px;
+      height: 1px;
+      background: rgba(243,234,219,0.50);
+      margin: 28px auto 26px;
+      opacity: 0.65;
+      border-radius: 999px;
+    }
+
+    article{
+      margin: 0 auto;
+      max-width: 82ch;
+      text-align: left;
+      color: rgba(243,234,219,0.84);
+      font-size: 1.02rem;
+    }
+
+    article h2, article h3{
+      margin-top: 26px;
+      color: rgba(243,234,219,0.92);
+    }
+
+    article a{
+      color: var(--accent);
+    }
+
+    article code{
+      background: rgba(243,234,219,0.08);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    article pre{
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow: auto;
+    }
+
+    article img{
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+
+      display: block;
+      margin: 28px auto;
+
+      border-radius: 8px;
+      border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    footer{
+      margin-top: auto;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(243,234,219,0.12);
+
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    footer a{
+      color: rgba(243,234,219,0.52);
+      text-decoration: none;
+    }
+
+    footer a:hover{
+      color: rgba(243,234,219,0.78);
+      text-shadow: 0 0 16px rgba(243,234,219,0.18);
+    }
+
+    @media (max-width: 520px){
+      main{ padding-top: 62px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a class="nav-link" href="/">Home</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/markham_daly.pdf" target="_blank" rel="noopener">Resume</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/blog/">Blog</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Home Lab Intro</h1>
+    <div class="meta">2026/01/16</div>
+
+    <div class="divider"></div>
+
+    <article>
+      <h1>TL;DR</h1>
+<p>This post documents the planning and design of my personal home lab, created to emulate enterprise networking concepts at a smaller scale. It covers goals, constrains, and architectural decisions behind the lab. The lab is designed to be isolated from my home network, flexible enough to evolve over time, and constrained by budget, space, and uptime requirements. Future posts will focus on implementation and individual projects. </p>
+<h2>Overview</h2>
+<p>Introduction</p>
+<ul>
+<li>What is this project?</li>
+<li>What is a home lab?</li>
+<li>Who is it for?</li>
+<li>How will it evolve?
+What am I trying to emulate?</li>
+<li>Network Architecture</li>
+<li>Identity &amp; Access Management</li>
+<li>Segmentation</li>
+<li>Firewalls</li>
+<li>Virtual Machines</li>
+<li>Hypervisors</li>
+<li>Services
+Project Goals
+Constraints &amp; Tradeoffs</li>
+<li>Preface</li>
+<li>Uptime</li>
+<li>Budget Limit</li>
+<li>Physical Location</li>
+<li>Size and Volume</li>
+<li>Security Exposure
+Planned Structure</li>
+<li>Compute</li>
+<li>Networking</li>
+<li>Housing</li>
+<li>Power</li>
+<li>Organization
+Network design</li>
+<li>Current Home Network</li>
+<li>Home Lab Design</li>
+</ul>
+<h1>Introduction</h1>
+<h3>What is this project?</h3>
+<p>It is a personal, sandbox home lab to build my networking skills. It will allow me to try different hardware, software and fill in knowledge gaps through experience. There is no specific end; this lab is meant to grow as I do. </p>
+<h3>What is a home lab?</h3>
+<p>A home lab is a personal IT environment used for learning, testing, and exploring new ideas. It provides a system, fully customizable to fit different needs. Often, IT professionals use them to try enterprise software or work through problems in their own home.  </p>
+<h3>Who is it for?</h3>
+<p>This project is primarily for me. I am passionate about learning and improving my skills and this lab gives me a way to do that. I can choose a concept that interests me and work with it, instead of only reading about it. This project is also for anyone who makes their way here. Whether it&#39;s to gain inspiration or see an approach to a shared problem, this project serves as a record of solutions and ideas discovered along the way.</p>
+<h3>How will it evolve?</h3>
+<p>Since this project won&#39;t have a designated end, its evolution will be important. The goal is to explore a wide range of topics in a home lab, instead of specializing.</p>
+<h1>What am I trying to emulate?</h1>
+<p>Enterprise networking is the art of large-scale, complex, data movement and control. This is important to mention because many of the upcoming projects will have relevance to larger scale applications. These networks are different from home networks largely due to scale and complexity. Some organizations have thousands of users, sites, locations, types of data. On the other hand, most home networks are a handful of devices focused on entertainment. Of course, this topic is broad enough to never be fully covered, so I&#39;ll break it down into the ways these concepts relate to my lab. </p>
+<h3>Network Architecture</h3>
+<p>Service location is a critical consideration for control because physical access offers the most customization. In the past, large networks were almost exclusively based on premises &quot;on-prem&quot;. They hosted their own network infrastructure and services, looking to manage and host everything in-house. Today, many businesses have moved into cloud structures that allow for rapid expansion and lower operational costs. Both of these options can work depending on business factors. The hybrid architecture sits in between, hosting some services and outsourcing others to reduce cost and maintenance as much as possible. In the end it&#39;s a balance between cost, control and priorities.</p>
+<h3>Identity &amp; Access Management</h3>
+<p>Unmanaged hosts are risky, therefore enterprise networks need Identity &amp; Access Management (IAM). This allows organizations to restrict users to not only employees but the employees that need access. When data can be a company&#39;s biggest asset, access needs to be restrictive and deliberate. Keeping to the networking applications of IAM, servers are the backbone. An Authentication, Authorization, and Accounting (AAA) server can be put in place, enforcing who and what should have access when it&#39;s requested.</p>
+<h3>Segmentation</h3>
+<p>Large networks produce traffic that can become noisy very quickly. Noise is when the data moving across a network becomes too dense to work with. It disrupts security, logging, and management. Segmentation is a networking technique that fixes this problem. It does this by channeling data into Virtual Local Area Networks (VLANs) which contain traffic to similar groups. This is done to make it harder for an attacker to traverse as well as easier to manage. I think of segmentation as TSA through the airport; if everyone was able to move through a large opening to their gate, there would be no security or identification. With TSA it&#39;s very different, traffic is isolated to their respective airline, filtered through identity and luggage checks and traveler interaction is limited. Segmentation is implemented to solve the same problems. It is important to mention that segmentation is considered &quot;logical&quot;, but in the case of the most sensitive data, physical separation may be needed. Overall, segmentation is vital to enterprise networks for its ability to improve management, security and reduce noise.</p>
+<h3>Firewalls</h3>
+<p>With all of this traffic organized there must be a way to control it. Firewalls are network devices that allow this organized data to be restricted. Sometimes, someone from the Sales team may need to communicate to a device within the Marketing team. In these cases a firewall decides whether communication is acceptable on the network. System administrators implement rules that allow or block based on conditions. Using these rules, limits can be set on how data flows. This could be as abstract as blocking a location that isn&#39;t relevant to the organization. Or as granular as block IP 14.201.176.12 at 9:00pm - 6:00am, from using port 21, on host A. This is similar to filters in a drinking water system: fiber, membrane, and chemical, making sure the water is safe to drink (to learn more about water filtering press <a href="reverseosmosis.html">here</a>). Firewalls work in a similar way purifying traffic to only what is essential to the organization. This enables security, risk reduction, and most importantly operations to run smoothly. </p>
+<h3>Virtual Machines</h3>
+<p>We have discussed traffic and identity but where are necessary services hosted? Often, in enterprise environments they live on a few hosts but not in the typical way. Typically, services are run -- Hardware -&gt; Operating System (OS) -&gt; Service. However, when many services are required, having a large number of devices becomes cumbersome. Virtualization is a solution that many choose to employ to fix this. Resources are pooled into one powerful device that holds multiple computer instances on it. These computer instances can run side by side and are known as Virtual Machines (VMs). This allows organizations to have fewer devices which frees up space. Since multiple VMs are on one host managing them becomes easier, often through just one management interface. Virtualization is vital in not only enterprise environments, but my home lab as well. </p>
+<h3>Hypervisors</h3>
+<p>When considering virtualization, hypervisors are the foundation for making it work; they are the software that allows multiple OSs on one device. A type 1 hypervisor runs on hardware itself similar to how operating systems work. The virtual machines run here are the main priority of this operating system. This means it can actively adjust resources based on the VMs&#39; needs. Type 2 runs as an application on an operating system instead of replacing it. Due to only running as an application the operating system considers the hypervisor as a lesser priority. Both types have their uses, however for enterprise and home lab, type one will be more important. </p>
+<h3>Services</h3>
+<p>There are many services that can be run on this infrastructure. However it will make more sense to detail them as they come up in lab use! This wraps up the enterprise networking section, next we move to..</p>
+<h1>Project Goals</h1>
+<p>The specific goals I have for this project are,</p>
+<ul>
+<li>Develop a technical understanding of new concepts through implementing them</li>
+<li>Build confidence and efficiency when learning and applying new technologies</li>
+<li>Design solutions that solve problems long term and can stand up to change</li>
+<li>Implement services that measurably improve network efficiency</li>
+<li>Create a record of challenges and successes for others to draw from</li>
+</ul>
+<p>These goals help to guide the choices and their tradeoffs discussed in the sections that follow.</p>
+<h1>Constraints &amp; Tradeoffs</h1>
+<h3>Preface</h3>
+<p>Having to manage challenges is beneficial. A home lab without compromise would stunt the growth of problem-solving skills. </p>
+<h3>Uptime</h3>
+<p>The lab cannot negatively impact uptime for other users. Many other people in my household conduct their work on our home internet. Therefore, I have decided to isolate my network so no one else is affected by the changes made. The tradeoff here is losing edge routing, since I can&#39;t make significant changes to the external devices. This tradeoff is acceptable because the firewall in the lab can act as an edge router without directly separating ISP from lab.</p>
+<h3>Budget Limit</h3>
+<p>Spending for this project must currently remain below $800. Overcoming this means choosing between cost for now and cost for later. So the balance is not purchasing something that needs immediate replacement or is overkill. The home lab will still be complete and meet my goals even with financial constraints.</p>
+<h3>Physical Location</h3>
+<p>The Modem and Router are separated from my designated home lab location by a floor and is unable to be relocated. The powerline ethernet used presents some challenges, including limited VLAN tagging, speed limitations and reliability concerns. These limitations don&#39;t pose an immediate threat and can be improved later.  </p>
+<h3>Size And Volume</h3>
+<p>Size must remain inside a DeskPi mini rack and sound must be as low volume as possible. These size and noise requirements do sacrifice peak performance and expansion. Within the limited size virtualization is available for multiple services and limited enterprise tooling.</p>
+<h3>Security Exposure</h3>
+<p>Nothing can compromise security, only improve it. So hosting services fixed to my IP publicly is not an option and any remote connectivity must remain secure. VPNs and internal services satisfy this because it doesn&#39;t increase attack surface significantly. Internal services work as well because they can have functionality inside the network without exposing ports. </p>
+<h1>Planned Structure</h1>
+<p>This section defines the roles and requirements of each component given my constraints mentioned above.</p>
+<h3>Compute</h3>
+<h6>Requirements</h6>
+<p>Compute will act as the brains of this home lab, enabling everything else. I was looking for a few things when choosing what can fill this requirement: size, speed, expandability, and cost. Due to my constraints, I needed a small form factor so it could reasonably fit inside the rack. Speed was important, not only for CPU processing power but also for memory. Expandability is an interesting priority since I had a limited form factor. Instead of wanting space for a GPU or multiple hard drives, the goal was 64 GB of memory. Of course, everything needed to fit within my budget as well. </p>
+<h6>Implementation</h6>
+<p>The purpose of these requirements was to fit within my constraints while still allowing me to run a hypervisor with multiple VMs. I chose Proxmox for this for a couple of reasons including space, expandability, management, and efficiency. Proxmox holds multiple VMs on one host, so I can save valuable space in the rack. It also allows for future clustering if I plan on expanding my compute power. Instead of managing separate devices through different displays, this approach allows me to use one consolidated web UI. Finally, pooling resources will always be more efficient than separating them from each other.</p>
+<h3>Networking</h3>
+<p>If the mini PC will act as the brains of my home lab, networking will be what brings it together. Here we will detail switches, cabling, and a router + firewall.</p>
+<h6>Switches</h6>
+<p> Switches allow for communication within a network because they connect devices together. This is important for the home lab since we need devices to be connected to each other as well as the internet. Priorities in choosing a switch included a few things: VLAN tagging ability, 8+ ports, 2.5g speed, and power over ethernet (PoE). Each of these requirements is important, so let&#39;s walk through them. VLAN capabilities are important for my future plans to gain experience with segmentation; although it is quite difficult to get management functionality in a small form factor.  8+ ports was chosen because it allows for plenty of expansion in the future. 2.5g speeds are currently overkill, however later on it will become useful when powerline ethernet is replaced. Finally, PoE is currently needed for a Pi Zero I have but will become more beneficial later especially for reducing cables. A switch that fits these needs will be minor overkill for my initial setup, but it will allow for growth without another major investment.  </p>
+<h6>Cabling</h6>
+<p>This section briefly describes the cable type that will occupy most of my lab. I have chosen Cat 6 because of its speed, size, and price. Since I don&#39;t plan on running any long lines and will likely be limited to 2.5g for the foreseeable future, it should work perfectly. The cables are thin and manageable so I won&#39;t have any issues when working with tight spaces. It also comes in at a reasonable price ($12 for a 10 pack of 1ft length). Overall Cat 6 was an easy choice compared to underpowered or overkill cable types available. RJ45 was chosen for the primary connector because it&#39;s inexpensive, widely available, and compatible with most network devices. </p>
+<h6>Router and Firewall</h6>
+<p>As stated earlier, this home lab will be separate from the rest of my home network. To achieve this I was considering a VM router / firewall or a physical device. The choice has not been made completely yet so I will list pros / cons of both. </p>
+<p>First, a virtualized option allows for easier management, due to it being located on Proxmox. It is also much easier to replace it with another software since it&#39;s just a VM. Its upsides lend to it&#39;s downsides, which come from the fact it isn&#39;t an individual device.</p>
+<p>A physical solution would also provide both benefits and negatives. The most valuable part of having a physical device is realism; in an enterprise situation a device as important as a firewall  would undoubtedly be physical. The challenges associated are again what makes it beneficial, a dedicated device means more specific constraints to work within.</p>
+<p>Although I haven&#39;t made a decision yet, I am leaning towards a physical device. </p>
+<h3>Housing</h3>
+<p>What contains the lab is very important when considering the space requirements. I have decided to go with the DeskPi RackMate T1-Plus 8U for its form factor. The specific model I have chosen measures 10.23&quot; by 8.34&quot; by 16.45&quot; (L x W x H, inside) offering plenty of room without being too large. The 8U of vertical space is more than the lab will necessitate, making sure expansion won&#39;t be an issue later. Each physical device will comfortably fit inside, especially with 3D printed organization. </p>
+<h3>Power</h3>
+<p>Within networks, insufficient power management can undermine significant investments. If a building loses power and there isn&#39;t an Uninterruptible Power Supply (UPS), critical systems are susceptible to data corruption. Although it is vital to prepare for power loss, the lab will not initially have one due to cost. As the lab grows and more important data is stored a UPS will be added.</p>
+<h3>Organization</h3>
+<p>Organization is often an under appreciated section of network environments. Improper routing and cable management are very hard to overcome after implementation. For this lab, I plan on using a patch panel as well as multiple types of cable ties. Both of these solutions allow for organized cables and easier future adjustment. Although this section is short, organization will play a pivotal role in the home lab&#39;s construction. </p>
+<h1>Network Design</h1>
+<p>Network design aims to display the logical goals of the home lab. When considering changes it is important to mention the current state of the network before detailing changes. Diagrams have been added to offer context alongside the text. </p>
+<h3>Current Home Network</h3>
+<p>My current home network is set up as many are, with routers offering most of the services. </p>
+<p><a href="blog/images/hnbefore.pdf">Beautifully drawn home network layout</a></p>
+<p>Internet access comes in from my ISP through coaxial cable. Then it goes to the modem where it is passed to my router. The router has the job of serving Wi-Fi to most devices in my home. It also uses Dynamic Host Configuration Protocol (DHCP) to serve IP addresses to all of the devices on the network. Of course, it is responsible for all the routing as well. Next to note on the network is a second router set to bridge mode; this is done to extend Wi-Fi range in the house. Due to limited port space on the original router, the bridge has a few services running off of it. First it has Pi-hole DNS that offers network-wide ad blocking, and a Philips Hue smart home device. </p>
+<p>As shown, data makes its way to the home lab site through powerline ethernet. Powerline has its own problems, but for now it will remain even as the home lab grows. The powerline adapter gets plugged into an outlet as well as an ethernet cable. Then it communicates with the other adapter to create a connection, where data can travel. </p>
+<h3>Home Lab Design</h3>
+<p>This section will visualize network architecture after home lab implementation.</p>
+<p><a href="blog/images/hnafter.pdf">Beautifully drawn updated home network</a></p>
+<p>This diagram has become more complicated, but I&#39;ll break it down. Information still comes in from my ISP and travels no differently up until going through powerline. Then from there data is first channeled through a firewall. This then changes the subnet from 192.168.1.0/24 to 10.10.1.0/24. Then from there it is brought to my switch, which supplies connectivity to the rest of the devices. </p>
+<p>Instead of there being one trust boundary from ISP to home network, there is a second entering my lab. This architecture allows me to do a few things: Separate my home lab from the rest of the network, give me full control over my subnet, and explore a broad range of projects over time. </p>
+<p>These diagrams are subject to change, and finalizations will be detailed in a later post discussing implementation.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <a href="/mitty/" target="_blank" rel="noopener">© 2026 Markham Daly</a>
+  </footer>
+</body>
+</html>
