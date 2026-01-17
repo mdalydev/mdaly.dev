@@ -172,7 +172,7 @@ Network design aims to display the logical goals of the home lab. When consideri
 
 My current home network is set up as many are, with routers offering most of the services. 
 
-[Beautifully drawn home network layout](blog/images/hnbefore.pdf)
+[Beautifully drawn home network layout](/blog/images/hnbefore.pdf)
 
 Internet access comes in from my ISP through coaxial cable. Then it goes to the modem where it is passed to my router. The router has the job of serving Wi-Fi to most devices in my home. It also uses Dynamic Host Configuration Protocol (DHCP) to serve IP addresses to all of the devices on the network. Of course, it is responsible for all the routing as well. Next to note on the network is a second router set to bridge mode; this is done to extend Wi-Fi range in the house. Due to limited port space on the original router, the bridge has a few services running off of it. First it has Pi-hole DNS that offers network-wide ad blocking, and a Philips Hue smart home device. 
 
@@ -182,7 +182,7 @@ As shown, data makes its way to the home lab site through powerline ethernet. Po
 
 This section will visualize network architecture after home lab implementation.
 
-[Beautifully drawn updated home network](blog/images/hnafter.pdf)
+[Beautifully drawn updated home network](/blog/images/hnafter.pdf)
 
 This diagram has become more complicated, but I'll break it down. Information still comes in from my ISP and travels no differently up until going through powerline. Then from there data is first channeled through a firewall. This then changes the subnet from 192.168.1.0/24 to 10.10.1.0/24. Then from there it is brought to my switch, which supplies connectivity to the rest of the devices. 
 
