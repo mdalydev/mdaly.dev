@@ -346,12 +346,12 @@ Network design</li>
 <p>Network design aims to display the logical goals of the home lab. When considering changes it is important to mention the current state of the network before detailing changes. Diagrams have been added to offer context alongside the text. </p>
 <h3>Current Home Network</h3>
 <p>My current home network is set up as many are, with routers offering most of the services. </p>
-<p><a href="/blog/images/hnbefore.pdf">Beautifully drawn home network layout</a></p>
+<p><img src="/blog/images/hnbefore.png" alt="Beautifully drawn home network layout"></p>
 <p>Internet access comes in from my ISP through coaxial cable. Then it goes to the modem where it is passed to my router. The router has the job of serving Wi-Fi to most devices in my home. It also uses Dynamic Host Configuration Protocol (DHCP) to serve IP addresses to all of the devices on the network. Of course, it is responsible for all the routing as well. Next to note on the network is a second router set to bridge mode; this is done to extend Wi-Fi range in the house. Due to limited port space on the original router, the bridge has a few services running off of it. First it has Pi-hole DNS that offers network-wide ad blocking, and a Philips Hue smart home device. </p>
 <p>As shown, data makes its way to the home lab site through powerline ethernet. Powerline has its own problems, but for now it will remain even as the home lab grows. The powerline adapter gets plugged into an outlet as well as an ethernet cable. Then it communicates with the other adapter to create a connection, where data can travel. </p>
 <h3>Home Lab Design</h3>
 <p>This section will visualize network architecture after home lab implementation.</p>
-<p><a href="/blog/images/hnafter.pdf">Beautifully drawn updated home network</a></p>
+<p><img src="/blog/images/hnafter.png" alt="Beautifully drawn updated home network"></p>
 <p>This diagram has become more complicated, but I&#39;ll break it down. Information still comes in from my ISP and travels no differently up until going through powerline. Then from there data is first channeled through a firewall. This then changes the subnet from 192.168.1.0/24 to 10.10.1.0/24. Then from there it is brought to my switch, which supplies connectivity to the rest of the devices. </p>
 <p>Instead of there being one trust boundary from ISP to home network, there is a second entering my lab. This architecture allows me to do a few things: Separate my home lab from the rest of the network, give me full control over my subnet, and explore a broad range of projects over time. </p>
 <p>These diagrams are subject to change, and finalizations will be detailed in a later post discussing implementation.</p>
