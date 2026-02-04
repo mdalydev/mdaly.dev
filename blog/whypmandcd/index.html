@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Why I Chose Proxmox and What I learned About Compute Decisions — Markham Daly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg: #5f6367;
+      --bg2: #565a5e;
+      --bg3: #6a6e72;
+
+      --text: #f3eadb;
+      --muted: rgba(243,234,219,0.78);
+      --accent: rgba(243,234,219,0.92);
+      --line: rgba(243,234,219,0.22);
+
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      color: var(--text);
+
+      background: var(--bg);
+
+      font-family: "Avenir Next", Avenir, "SF Pro Display", -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0.2px;
+
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+
+      position: relative;
+      isolation: isolate;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+
+      background:
+        radial-gradient(1600px 900px at 50% -30%, rgba(255,255,255,0.06), transparent 70%),
+        radial-gradient(1400px 900px at 80% 20%, rgba(255,255,255,0.04), transparent 72%);
+      opacity: 0.95;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(243,234,219,0.10);
+    }
+
+    .nav-wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .nav-link{
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.98rem;
+      padding: 6px 2px;
+      position: relative;
+      transition: color 140ms ease, transform 140ms ease;
+    }
+
+    .nav-link::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 1px;
+      background: rgba(243,234,219,0.0);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .nav-link:hover{
+      color: var(--accent);
+      transform: translateY(-1px);
+      text-shadow: 0 0 18px rgba(243,234,219,0.18);
+    }
+
+    .nav-link:hover::after{
+      transform: scaleX(1);
+      background: rgba(243,234,219,0.65);
+    }
+
+    .sep{
+      color: rgba(243,234,219,0.40);
+      user-select: none;
+      transform: translateY(-1px);
+    }
+
+    main{
+      flex: 1; 
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 74px 18px 46px;
+      text-align: center;
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(2.0rem, 3.2vw, 3.0rem);
+      font-weight: 650;
+      letter-spacing: 0.3px;
+    }
+
+    .meta{
+      margin: 12px auto 0;
+      color: rgba(243,234,219,0.70);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .divider{
+      width: 84px;
+      height: 1px;
+      background: rgba(243,234,219,0.50);
+      margin: 28px auto 26px;
+      opacity: 0.65;
+      border-radius: 999px;
+    }
+
+    article{
+      margin: 0 auto;
+      max-width: 82ch;
+      text-align: left;
+      color: rgba(243,234,219,0.84);
+      font-size: 1.02rem;
+    }
+
+    article h2, article h3{
+      margin-top: 26px;
+      color: rgba(243,234,219,0.92);
+    }
+
+    article a{
+      color: var(--accent);
+    }
+
+    article code{
+      background: rgba(243,234,219,0.08);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    article pre{
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow: auto;
+    }
+
+    article img{
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+
+      display: block;
+      margin: 28px auto;
+
+      border-radius: 8px;
+      border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    footer{
+      margin-top: auto;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(243,234,219,0.12);
+
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    footer a{
+      color: rgba(243,234,219,0.52);
+      text-decoration: none;
+    }
+
+    footer a:hover{
+      color: rgba(243,234,219,0.78);
+      text-shadow: 0 0 16px rgba(243,234,219,0.18);
+    }
+
+    @media (max-width: 520px){
+      main{ padding-top: 62px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a class="nav-link" href="/">Home</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/markham_daly.pdf" target="_blank" rel="noopener">Resume</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/blog/">Blog</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Why I Chose Proxmox and What I learned About Compute Decisions</h1>
+    <div class="meta">2026/02/04</div>
+
+    <div class="divider"></div>
+
+    <article>
+      <p>Over the past month, I have had the opportunity to implement a few of the things from the <a href="/blog/homelabintro/">home lab intro</a> post. This post isn&#39;t a tutorial; instead, it explores my experience and decision making.</p>
+<p>With that in mind, I chose Proxmox for a few reasons. One of the primary factors was familiarity, having used Proxmox previously in a cybersecurity competition. Flexibility is a major priority when it comes to management, since I may access the environment from multiple devices. Another reason, particularly when compared to VMware ESXi, is that Proxmox is free and open source. Installing it is no different from installing other Linux distributions, without licensing and other strings attached. Finally, its support for virtualization, containerization with LXCs (Linux Containers), broad hardware compatibility, and straightforward networking made it a clear choice for my use case. Overall, at no cost, Proxmox offers a stable platform that can be relied on for the foreseeable future.</p>
+<p><img src="/blog/images/Optiplex.png" alt="Public image of Dell OptiPlex "></p>
+<p>My current compute setup is a Dell OptiPlex Micro 7010. This device features a micro form factor while still offering enough power to support the virtual machines I plan on running. The OptiPlex uses an i5-13500T, which is part of Intel’s Raptor Lake generation. This processor is most significant to me for its 14-core and 20-thread performance, which is more than sufficient for my workload. The “T” designation indicates a lower clock speed and reduced power draw, with a 35W thermal design power (TDP). While this may seem like a drawback on paper, excess performance isn’t necessary for my situation, making lower power consumption a priority. When purchased, the system included a 256GB NVMe solid-state drive (SSD). Although I had a 1TB SanDisk USB SSD for backups and static images, high-speed internal storage quickly became a limiting factor. As a result, I upgraded the internal SSD to a 1TB Samsung 980 PRO, which had only 1.6TB of total writes. This SSD model has been used reliably in my desktop computer, so I was comfortable installing it in my server as well. Finally, the OptiPlex came with a single 16GB stick of random access memory (RAM). This was manageable for a short time, however, once several services (including two Minecraft servers) were running, memory became a bottleneck. Adding a matching 16GB DDR4-3200 module significantly increased the RAM ceiling. Due to these factors, the OptiPlex 7010 has proven to be a strong Proxmox host, and if further expansion is needed, hardware upgrades or additional nodes can be added without issue.</p>
+<p>There were several challenges throughout this process that made the project more than simple direction following. These ranged from quick fixes to hours of troubleshooting. The first issue presented itself when installing the internal SSD, as physical space became a constraint. The Intel Wi-Fi card blocked the 2280 form factor of the drive due to its larger heatsink. After some research, I determined the card wasn’t critical to system functionality and removed it completely.</p>
+<p>Another challenge involved updating the firmware on the new NVMe drive, which was two generations behind. I initially attempted to boot into an Ubuntu image to verify the firmware version and flash the update. However, I ran into an issue where no display output appeared, stopping any confirmation of progress. After multiple attempts and determining that no changes had been made, I installed the drive into a secondary NVMe bay on my main desktop and used Samsung Magician to complete the update quickly. It is possible to perform this update directly on the host; however, using a second system was the most effective solution in this case.</p>
+<p>Booting back into Proxmox was straightforward given my prior experience, even though reconfiguring the host and restoring backups were new tasks. While this didn&#39;t present a major challenge, I learned that a full backup of a VM doesn&#39;t instantly mean it can run, often there must be a base image to boot from. </p>
+<p>I also needed to recreate a network interface card (NIC) offloading fix due to occasional lockups. To identify the problem, I pinged the host from other devices, checked uptime, reviewed interface statuses, and researched intermittent packet drops. Based on this, I added a systemd service that disables NIC offloading features after establishing a network connection, which fully resolved the issue. </p>
+<pre><code># /etc/systemd/system/nic-offload-fix.service
+[Unit]
+Description=Disable NIC offloads
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/ethtool -K nic0 tso off gso off gro off rx off tx off
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>The final problem I encountered involved the newly installed RAM not being recognized initially, which was resolved by reseating the module.</p>
+<p>Although everything is now functioning properly, the most valuable part of this setup process has been learning how to identify and solve problems with limited information. Taking the time to research, test, and reconfigure systems has allowed me to overcome issues I hadn’t seen before. Developing my troubleshooting skills alongside steady progress has been very rewarding.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <a href="/mitty/" target="_blank" rel="noopener">© 2026 Markham Daly</a>
+  </footer>
+</body>
+</html>

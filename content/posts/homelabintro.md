@@ -7,7 +7,7 @@ description: This post will go through my upcoming home lab project (what, why, 
 
 This post documents the planning and design of my personal home lab, created to emulate enterprise networking concepts at a smaller scale. It covers goals, constrains, and architectural decisions behind the lab. The lab is designed to be isolated from my home network, flexible enough to evolve over time, and constrained by budget, space, and uptime requirements. Future posts will focus on implementation and individual projects. 
 
-## Overview
+# Overview
 
 Introduction
 - What is this project?
@@ -129,24 +129,24 @@ Nothing can compromise security, only improve it. So hosting services fixed to m
 This section defines the roles and requirements of each component given my constraints mentioned above.
 
 ### Compute
-###### Requirements
+#### Requirements
 
 Compute will act as the brains of this home lab, enabling everything else. I was looking for a few things when choosing what can fill this requirement: size, speed, expandability, and cost. Due to my constraints, I needed a small form factor so it could reasonably fit inside the rack. Speed was important, not only for CPU processing power but also for memory. Expandability is an interesting priority since I had a limited form factor. Instead of wanting space for a GPU or multiple hard drives, the goal was 64 GB of memory. Of course, everything needed to fit within my budget as well. 
 
-###### Implementation
+#### Implementation
 
 The purpose of these requirements was to fit within my constraints while still allowing me to run a hypervisor with multiple VMs. I chose Proxmox for this for a couple of reasons including space, expandability, management, and efficiency. Proxmox holds multiple VMs on one host, so I can save valuable space in the rack. It also allows for future clustering if I plan on expanding my compute power. Instead of managing separate devices through different displays, this approach allows me to use one consolidated web UI. Finally, pooling resources will always be more efficient than separating them from each other.
 ### Networking
 
 If the mini PC will act as the brains of my home lab, networking will be what brings it together. Here we will detail switches, cabling, and a router + firewall.
 
-###### Switches
+#### Switches
 
  Switches allow for communication within a network because they connect devices together. This is important for the home lab since we need devices to be connected to each other as well as the internet. Priorities in choosing a switch included a few things: VLAN tagging ability, 8+ ports, 2.5g speed, and power over ethernet (PoE). Each of these requirements is important, so let's walk through them. VLAN capabilities are important for my future plans to gain experience with segmentation; although it is quite difficult to get management functionality in a small form factor.  8+ ports was chosen because it allows for plenty of expansion in the future. 2.5g speeds are currently overkill, however later on it will become useful when powerline ethernet is replaced. Finally, PoE is currently needed for a Pi Zero I have but will become more beneficial later especially for reducing cables. A switch that fits these needs will be minor overkill for my initial setup, but it will allow for growth without another major investment.  
-###### Cabling
+#### Cabling
 
 This section briefly describes the cable type that will occupy most of my lab. I have chosen Cat 6 because of its speed, size, and price. Since I don't plan on running any long lines and will likely be limited to 2.5g for the foreseeable future, it should work perfectly. The cables are thin and manageable so I won't have any issues when working with tight spaces. It also comes in at a reasonable price ($12 for a 10 pack of 1ft length). Overall Cat 6 was an easy choice compared to underpowered or overkill cable types available. RJ45 was chosen for the primary connector because it's inexpensive, widely available, and compatible with most network devices. 
-###### Router and Firewall
+#### Router and Firewall
 
 As stated earlier, this home lab will be separate from the rest of my home network. To achieve this I was considering a VM router / firewall or a physical device. The choice has not been made completely yet so I will list pros / cons of both. 
 
