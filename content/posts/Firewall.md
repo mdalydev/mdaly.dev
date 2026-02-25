@@ -85,7 +85,7 @@ Once I ruled out the cheapest option of virtualization, it became clearer. If I 
 
 With those criteria in mind, I began scanning used marketplaces for a device that met my requirements as well as my budget. After a few weeks of watching listings, I found the right candidate.
 
-![VMware Edge 640 Listing Image and Title](/blog/images/FirewallListingImage.png)
+![VMware Edge 640 Seller Listing Image and Title](/blog/images/FirewallListingImage.png)
 
 Enter, the VMware Edge 640, equipped with:
 
