@@ -177,16 +177,27 @@
       overflow: auto;
     }
 
-    article img{
-      width: 100%;
-      max-width: 720px;
-      height: auto;
-
+    article img.blog-image{
       display: block;
+      max-width: 100%;
+      height: auto;
       margin: 28px auto;
-
       border-radius: 8px;
       border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    article img.blog-image--wide{
+      width: min(1000px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    article img.blog-image--full{
+      width: min(1200px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
 
     footer{
@@ -213,6 +224,15 @@
 
     @media (max-width: 520px){
       main{ padding-top: 62px; }
+
+      article img.blog-image--wide,
+      article img.blog-image--full{
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+      }
     }
   </style>
 </head>
@@ -242,7 +262,7 @@
 <h1>Attempt #1: Silicom Appliance</h1>
 <p>Most opportunities for success begin with failure, at least in my experience, and this was one of them.</p>
 <p>When purchasing my compute node, the seller included a Silicom ATT-V150 that had originally been created for AT&amp;T. It was a great deal overall, other than the fact that I needed to purchase an uncommon power cable to use it. </p>
-<p><img src="/blog/images/ATT-V150.png" alt="Silicom ATT-V150 Image "></p>
+<p><img src="/blog/images/ATT-V150.png" alt="Silicom ATT-V150 Image" class="blog-image" loading="lazy"></p>
 <p>At first glance, it looked promising. The front panel had multiple ports, including two SFP+ cages, and the hardware itself was solid for a small firewall: 4 cores, 8 GB of memory, and 64 GB of storage. For OPNsense, that would be more than enough. </p>
 <p>After installing OPNsense (FreeBSD-based), I discovered that only the management port and the two SFP+ interfaces were recognized by the operating system. The other ports were either disabled or hidden behind AT&amp;T&#39;s original design. It was made to have specific routing paths for the carrier, and was not intended to be used as a general purpose multi-interface firewall. </p>
 <p>At that point, I decided to work around the limitation rather than abandon it. </p>
@@ -286,7 +306,7 @@ multi-interface firewall my lab needed.</p>
 <p>Once I ruled out the cheapest option of virtualization, it became clearer. If I was going to invest in a firewall, it needed to be a long term solution instead of a temporary patch. </p>
 <h1>Attempt #2: The Right Fit</h1>
 <p>With those criteria in mind, I began scanning used marketplaces for a device that met my requirements as well as my budget. After a few weeks of watching listings, I found the right candidate.</p>
-<p><img src="/blog/images/FirewallListingImage.png" alt="VMware Edge 640 Seller Listing Image and Title"></p>
+<p><img src="/blog/images/FirewallListingImage.png" alt="VMware Edge 640 Seller Listing Image and Title" class="blog-image" loading="lazy"></p>
 <p>Enter, the VMware Edge 640, equipped with:</p>
 <ul>
 <li>Intel NICs (I350 + X553)</li>
@@ -302,7 +322,7 @@ multi-interface firewall my lab needed.</p>
 <p>It was not the deciding factor in my purchase, but it adds credibility to the fact that this platform was made for similar use cases to mine. </p>
 <h1>Implementation Overview</h1>
 <p>My final topology is designed to be simple, but intentional. </p>
-<p><img src="/blog/images/FirewallDiagram.png" alt="Diagram of my current network setup"></p>
+<p><img src="/blog/images/FirewallDiagram.png" alt="Diagram of my current network setup" class="blog-image" loading="lazy"></p>
 <p>The internet connection starts through my family&#39;s ISP router. Instead of using my firewall to replace it, I treat it as an upstream device and use port forwarding rules to expose WireGuard to my lab firewall. This allows me to enable remote access without any disruption. </p>
 <p>From there, </p>
 <ul>
@@ -336,7 +356,7 @@ multi-interface firewall my lab needed.</p>
 <p>The seller had noted that, when using FreeBSD operating systems, the fans run at full speed at all times because fan controls aren&#39;t exposed. When testing, this meant the factory high-RPM server fans ran at 100% constantly. </p>
 <p>In a rack closet, this would not matter. On a desk in a bedroom, it certainly did. </p>
 <p>After living with the noise level for a few days, I determined it was slightly too loud to be acceptable long term. </p>
-<p><img src="/blog/images/40x40x10fan.png" alt="Replacement Noctua Fan (40x40x10)"></p>
+<p><img src="/blog/images/40x40x10fan.png" alt="Replacement Noctua Fan (40x40x10)" class="blog-image" loading="lazy"></p>
 <p>I purchased two 40x40x10 Noctua replacement fans. With this upgrade I expected a similar experience to every other fan change I&#39;ve done, plug and play. When powering on the appliance, the new fans would spin briefly and then stop. </p>
 <p>Viewing the console during boot revealed that the system was failing its fan detection test. The original server fans likely reported a certain RPM that the replacement fans were not fulfilling due to their intentionally lower speed designed to reduce noise. As a result, the firewall would shut down and refuse to acknowledge them. </p>
 <p>What followed wasn&#39;t pretty.</p>

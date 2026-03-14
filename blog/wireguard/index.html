@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WireGuard and Remote Access in My Home Lab — Markham Daly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg: #5f6367;
+      --bg2: #565a5e;
+      --bg3: #6a6e72;
+
+      --text: #f3eadb;
+      --muted: rgba(243,234,219,0.78);
+      --accent: rgba(243,234,219,0.92);
+      --line: rgba(243,234,219,0.22);
+
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      color: var(--text);
+
+      background: var(--bg);
+
+      font-family: "Avenir Next", Avenir, "SF Pro Display", -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0.2px;
+
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+
+      position: relative;
+      isolation: isolate;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+
+      background:
+        radial-gradient(1600px 900px at 50% -30%, rgba(255,255,255,0.06), transparent 70%),
+        radial-gradient(1400px 900px at 80% 20%, rgba(255,255,255,0.04), transparent 72%);
+      opacity: 0.95;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(243,234,219,0.10);
+    }
+
+    .nav-wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .nav-link{
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.98rem;
+      padding: 6px 2px;
+      position: relative;
+      transition: color 140ms ease, transform 140ms ease;
+    }
+
+    .nav-link::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 1px;
+      background: rgba(243,234,219,0.0);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .nav-link:hover{
+      color: var(--accent);
+      transform: translateY(-1px);
+      text-shadow: 0 0 18px rgba(243,234,219,0.18);
+    }
+
+    .nav-link:hover::after{
+      transform: scaleX(1);
+      background: rgba(243,234,219,0.65);
+    }
+
+    .sep{
+      color: rgba(243,234,219,0.40);
+      user-select: none;
+      transform: translateY(-1px);
+    }
+
+    main{
+      flex: 1; 
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 74px 18px 46px;
+      text-align: center;
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(2.0rem, 3.2vw, 3.0rem);
+      font-weight: 650;
+      letter-spacing: 0.3px;
+    }
+
+    .meta{
+      margin: 12px auto 0;
+      color: rgba(243,234,219,0.70);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .divider{
+      width: 84px;
+      height: 1px;
+      background: rgba(243,234,219,0.50);
+      margin: 28px auto 26px;
+      opacity: 0.65;
+      border-radius: 999px;
+    }
+
+    article{
+      margin: 0 auto;
+      max-width: 82ch;
+      text-align: left;
+      color: rgba(243,234,219,0.84);
+      font-size: 1.02rem;
+    }
+
+    article h2, article h3{
+      margin-top: 26px;
+      color: rgba(243,234,219,0.92);
+    }
+
+    article a{
+      color: var(--accent);
+    }
+
+    article code{
+      background: rgba(243,234,219,0.08);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    article pre{
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow: auto;
+    }
+
+    article img.blog-image{
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 28px auto;
+      border-radius: 8px;
+      border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    article img.blog-image--wide{
+      width: min(1000px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    article img.blog-image--full{
+      width: min(1200px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    footer{
+      margin-top: auto;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(243,234,219,0.12);
+
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    footer a{
+      color: rgba(243,234,219,0.52);
+      text-decoration: none;
+    }
+
+    footer a:hover{
+      color: rgba(243,234,219,0.78);
+      text-shadow: 0 0 16px rgba(243,234,219,0.18);
+    }
+
+    @media (max-width: 520px){
+      main{ padding-top: 62px; }
+
+      article img.blog-image--wide,
+      article img.blog-image--full{
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a class="nav-link" href="/">Home</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/markham_daly.pdf" target="_blank" rel="noopener">Resume</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/blog/">Blog</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>WireGuard and Remote Access in My Home Lab</h1>
+    <div class="meta">2026/03/13</div>
+
+    <div class="divider"></div>
+
+    <article>
+      <h1>Initial Problem</h1>
+<p>In the previous post, I created a clear boundary between my family&#39;s home network and my lab&#39;s network by installing a firewall. That separation allowed me freedom to experiment without disrupting others. </p>
+<p>However, separation introduces another problem: how do you access a network remotely without weakening the boundary that was just built?</p>
+<p>Access needed to be granted for these purposes:</p>
+<ul>
+<li>Hosting a Minecraft server</li>
+<li>Viewing security cameras</li>
+<li>Performing administrative tasks</li>
+<li>Secure private browsing while away from home</li>
+</ul>
+<p>The moment remote access is introduced, the landscape changes completely. Traffic is no longer starting from inside the house, it comes from wherever the user may be. That means exposure shoots up, and the solution must assume untrusted networks. </p>
+<p>Simply opening ports directly to services wasn&#39;t an option. That would defeat the purpose of the firewall as a controlled boundary and increase attack surface unnecessarily.</p>
+<p>At the same time, the solution couldn&#39;t be too complex. If family or friends needed access, it had to be both secure and practical. </p>
+<h1>What is WireGuard</h1>
+<p>WireGuard is a modern Virtual Private Network (VPN) protocol that facilitates a secure, encrypted tunnel between remote devices across the internet. </p>
+<p>Unlike older VPN protocols such as IPsec or OpenVPN, WireGuard was created with a clear goal of simplicity. Its codebase is far smaller, making it easier to audit, maintain, and deploy. The configuration is also minimal by design, using private and public key pairs (asymmetric encryption) instead of more complex certificates.</p>
+<p>Each device involved in a WireGuard network is a &quot;peer&quot; and is identified by its public key. When two peers trust each other&#39;s keys, an encrypted tunnel can be established between them. Traffic sent through this tunnel is encrypted and routed based on the configured allowed IP ranges.</p>
+<h1>Why It&#39;s Critical in My Lab</h1>
+<p>I would describe WireGuard as critical in my lab for several reasons. </p>
+<h3>Firewall Boundary</h3>
+<p>My firewall acts as the boundary to my lab network, allowing only certain connections to pass through. This firewall runs OPNsense and hosts WireGuard as a service. Each WireGuard instance operates on its own interface, completely separate from my Local Area Network (LAN). As a result, the only traffic allowed from WireGuard into the LAN is what is explicitly permitted through firewall rules.</p>
+<h3>Controlled Ingress</h3>
+<p>WireGuard also offers visibility into the remote connections established. I can see when users connect, how long they remain connected, and how much traffic they are generating.  This basic monitoring gives me a simple way to make sure that remote access is behaving in expected ways and allows me to identify suspicious behavior. </p>
+<h3>Minecraft Server</h3>
+<p>Minecraft servers are frequently exposed to the public internet through port forwarding or domain hosting. Although this works, it allows anyone on the internet to discover and attempt to connect to the server. With WireGuard, the server is not exposed in the same way. A secure tunnel must be established first, before access is possible. Only after that connection exists can users reach the Minecraft server. </p>
+<h3>Camera Access</h3>
+<p>Unlike a game server, a camera system can bring serious privacy considerations. These cameras support visibility into my home and are for the members of my family. Instead of exposing the camera system to the internet or granting Wi-Fi access broadly, access is available almost completely through WireGuard connections. </p>
+<h3>Administrative Access</h3>
+<p>I also need to manage my network while away from home. This includes viewing services, adjusting firewall rules, and performing maintenance.  Since admin work requires the highest level of trust, I run another instance that is dedicated specifically to my own management access.</p>
+<h3>Avoiding Public Service Exposure</h3>
+<p>One of the most important benefits of this structure is that services are not directly exposed to the internet. Instead of placing cameras, Minecraft servers, or admin interfaces behind only a username and password, a pre-established key pair must first be used to permit WireGuard to create a tunnel. This significantly reduces the attack surface of the network by only allowing pre-approved users through tunnels instead of anyone from the internet. </p>
+<h3>User Simplicity</h3>
+<p>Finally, the system needed to be simple enough for any technical level. Connecting to the network requires an easy import of a config file. Once added, users can switch on or off the connection as needed, while maintaining access to the services they are authorized to use. </p>
+<h1>How It&#39;s Set Up</h1>
+<p>WireGuard in my home lab is actually a relatively simple setup once the initial setup has been completed. However, a few pieces must be configured correctly before any remote connection can be made. </p>
+<p>First, OPNsense must be installed and operating as the firewall for my lab network. Inside OPNsense, I created multiple WireGuard instances that serve different purposes. In my case they are separated by function: admin access, cameras, and Minecraft access. </p>
+<p>For these instances to be reachable from outside my network, my home router forwards traffic to the firewall. This allows external peers to access their correct instance. Without this port forwarding rule, remote devices would have no path to reach the firewall. </p>
+<p>Below is an image of an example config on this router.</p>
+<p><img src="/blog/images/PortForward.png" alt="Router PF Config" class="blog-image blog-image--full" loading="lazy"></p>
+<p>Separating instances based on purpose ended up being really important. Initially I was managing access by remembering IP addresses when writing firewall rules. That quickly became very messy. Instead, placing users into categorized instances made access control far easier to manage. </p>
+<p>This change was made because of experience. At one point my brother, who was only supposed to access a Minecraft world, was able to reach the game server&#39;s login page. While harmless in that situation, it showed me how easily messy rules create gaps in control. After that, separating access into dedicated instances was the clear solution. </p>
+<h3>Creating a Peer</h3>
+<p>For any device to connect, a peer must first be generated on the firewall. OPNsense offers a built-in peer generator that simplifies this process. </p>
+<p>A peer configuration has several main parameters:</p>
+<ul>
+<li>Instance (Which WireGuard interface it belongs to)</li>
+<li>Endpoint (Public address of the network)</li>
+<li>Public and Private Keys</li>
+<li>Addresses (the IP assigned inside the VPN&#39;s network)</li>
+<li>Allowed IPs</li>
+<li>Persistent Keepalive</li>
+</ul>
+<p>Once the configuration is finished, OPNsense automatically generates a configuration text and a QR code. This makes onboarding a peer really simple. Mobile devices can easily scan the QR code, while computers can import the config file directly into the WireGuard application.</p>
+<p>The image below shows that peer generator.</p>
+<p><img src="/blog/images/PeerGen.png" alt="WireGuard&amp;#39;s Peer Generator" class="blog-image blog-image--full" loading="lazy"></p>
+<p>Once the config is imported and enabled on the device, the rest of the setup takes place on the firewall.</p>
+<h3>Firewall Rules and Access Control</h3>
+<p>After the peer is created, firewall rules decide what the connected user can actually access.</p>
+<p>If the peer belongs to an instance that already has rules defined, the user can immediately connect and reach those services. If a new instance is created, the interface must be enabled and firewall rules must be written for it. </p>
+<p>These rules are meant to be restrictive and based only on the user&#39;s purpose.</p>
+<p>For example:</p>
+<ul>
+<li>Admin instance allows full access to the lab network so I can manage systems as if I were physically home</li>
+<li>The Minecraft instance only allows traffic to the server&#39;s IP and port. </li>
+<li>The camera instance allows access to only the camera system.</li>
+</ul>
+<p>This approach stops users from accessing services they weren&#39;t intended to reach.</p>
+<h3>Troubleshooting</h3>
+<p>Although the final setup looks straightforward, getting to this point required a significant amount of troubleshooting. </p>
+<p>Early on, I spent way too much time attempting to diagnose issues using only the web interface. Over time I learned that when data was not flowing, the fastest way to diagnose the problem is to start from the earliest point where traffic should appear. </p>
+<p>When a connection attempt fails, I first check for activity through the OPNsense status page or directly from the shell. </p>
+<p>Using tools like sockstat, I can see whether traffic is reaching the firewall&#39;s WAN interface and the WireGuard service itself. </p>
+<p>If traffic is not reaching WAN, the problem is usually one of two things:</p>
+<ul>
+<li>the peer is misconfigured</li>
+<li>the home router&#39;s port forwarding rule is misconfigured or has not been applied properly.</li>
+</ul>
+<p>If traffic reaches the firewall but the tunnel does not establish, the most common cause is a mismatch in keys. In those cases I simply compare the configuration on the peer with the values the firewall expects.</p>
+<p>I have also learned that the configuration generator may not update fields if changes are made but not applied before exporting the config. This occasionally leads to incorrect key values being shared with the peer. </p>
+<p>Once the connection has been confirmed and the tunnel is active, any remaining issues are almost always firewall rules. These are usually quick to fix. A short test using one of my own devices is enough to confirm whether rules are correct. </p>
+<h3>What This Process Taught Me</h3>
+<p>The most valuable improvement from this process was not the final configuration on its own, but how my troubleshooting approach evolved. </p>
+<p>Previously, I would retry the same configuration steps, hoping something would start working. Over time I instead learned to find the point of failure and work there.</p>
+<p>This shift from shooting blind to a structure has made working with WireGuard significantly more efficient. Problems that once took hours to diagnose can now be pinpointed in a few minutes. </p>
+<p>While frustrating at times, the troubleshooting process has been one of the most valuable learning experiences in building my home lab. </p>
+<h1>Enterprise Similarities</h1>
+<p>Although my home lab is on a much smaller scale, the concepts behind this setup attempt to mirror how many enterprise networks configure remote access. </p>
+<p>Organizations frequently use VPNs to allow employees and administrators to securely access internal services from outside the corporate network. Instead of exposing those internal services to the internet, access is granted only after a secure tunnel has been made. This reduces the attack surface of the network and keeps internal infrastructure private. </p>
+<p>In my lab, the same idea applies. Services such as Minecraft and a camera system are not publicly exposed. Access is only possible after a tunnel is connected and is passing through firewall rules matched to that connection. </p>
+<p>Where enterprise networks differ most is scale. In my setup, peers are created manually and config files are shared directly with users. During my time with UAlbany&#39;s Cyber Defense Organization, I saw systems where users would authenticate on their own and automatically gain a VPN connection. This approach is far better for creating and then managing many remote users without manual deployment. </p>
+<p>Although scale is massively different, the goal is the same: create secure remote access without losing granular control over what users are able to reach. </p>
+<h1>Final Thoughts</h1>
+<p>WireGuard has become one of the most valuable and enjoyable parts of my home lab. What started as a desire for remote access grew to a secure repeatable approach to network access. </p>
+<p>Beyond the technical details of my lab, this system helped me learn an important lesson about network design: the architecture and controls matter just as much as the services themselves.. kind of like having a really nice bicycle with flat tires. It will be hard to get where you need to go. Even in my small environment, thinking over the structure I want and why can prevent mistakes and make systems much easier to manage over time. </p>
+<p>As my lab grows further, foundations like these will help me experiment without losing a clear and secure boundary.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <a href="/mitty/" target="_blank" rel="noopener">© 2026 Markham Daly</a>
+  </footer>
+</body>
+</html>

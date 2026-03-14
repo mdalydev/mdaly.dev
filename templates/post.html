@@ -177,16 +177,27 @@
       overflow: auto;
     }
 
-    article img{
-      width: 100%;
-      max-width: 720px;
-      height: auto;
-
+    article img.blog-image{
       display: block;
+      max-width: 100%;
+      height: auto;
       margin: 28px auto;
-
       border-radius: 8px;
       border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    article img.blog-image--wide{
+      width: min(1000px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    article img.blog-image--full{
+      width: min(1200px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
 
     footer{
@@ -213,6 +224,15 @@
 
     @media (max-width: 520px){
       main{ padding-top: 62px; }
+
+      article img.blog-image--wide,
+      article img.blog-image--full{
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+      }
     }
   </style>
 </head>

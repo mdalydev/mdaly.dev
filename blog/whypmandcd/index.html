@@ -177,16 +177,27 @@
       overflow: auto;
     }
 
-    article img{
-      width: 100%;
-      max-width: 720px;
-      height: auto;
-
+    article img.blog-image{
       display: block;
+      max-width: 100%;
+      height: auto;
       margin: 28px auto;
-
       border-radius: 8px;
       border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    article img.blog-image--wide{
+      width: min(1000px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    article img.blog-image--full{
+      width: min(1200px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
 
     footer{
@@ -213,6 +224,15 @@
 
     @media (max-width: 520px){
       main{ padding-top: 62px; }
+
+      article img.blog-image--wide,
+      article img.blog-image--full{
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+      }
     }
   </style>
 </head>
@@ -237,7 +257,7 @@
     <article>
       <p>Over the past month, I have had the opportunity to implement a few of the things from the <a href="/blog/homelabintro/">home lab intro</a> post. This post isn&#39;t a tutorial; instead, it explores my experience and decision making.</p>
 <p>With that in mind, I chose Proxmox for a few reasons. One of the primary factors was familiarity, having used Proxmox previously in a cybersecurity competition. Flexibility is a major priority when it comes to management, since I may access the environment from multiple devices. Another reason, particularly when compared to VMware ESXi, is that Proxmox is free and open source. Installing it is no different from installing other Linux distributions, without licensing and other strings attached. Finally, its support for virtualization, containerization with LXCs (Linux Containers), broad hardware compatibility, and straightforward networking made it a clear choice for my use case. Overall, at no cost, Proxmox offers a stable platform that can be relied on for the foreseeable future.</p>
-<p><img src="/blog/images/Optiplex.png" alt="Public image of Dell OptiPlex "></p>
+<p><img src="/blog/images/Optiplex.png" alt="Public image of Dell OptiPlex" class="blog-image" loading="lazy"></p>
 <p>My current compute setup is a Dell OptiPlex Micro 7010. This device features a micro form factor while still offering enough power to support the virtual machines I plan on running. The OptiPlex uses an i5-13500T, which is part of Intel’s Raptor Lake generation. This processor is most significant to me for its 14-core and 20-thread performance, which is more than sufficient for my workload. The “T” designation indicates a lower clock speed and reduced power draw, with a 35W thermal design power (TDP). While this may seem like a drawback on paper, excess performance isn’t necessary for my situation, making lower power consumption a priority. When purchased, the system included a 256GB NVMe solid-state drive (SSD). Although I had a 1TB SanDisk USB SSD for backups and static images, high-speed internal storage quickly became a limiting factor. As a result, I upgraded the internal SSD to a 1TB Samsung 980 PRO, which had only 1.6TB of total writes. This SSD model has been used reliably in my desktop computer, so I was comfortable installing it in my server as well. Finally, the OptiPlex came with a single 16GB stick of random access memory (RAM). This was manageable for a short time, however, once several services (including two Minecraft servers) were running, memory became a bottleneck. Adding a matching 16GB DDR4-3200 module significantly increased the RAM ceiling. Due to these factors, the OptiPlex 7010 has proven to be a strong Proxmox host, and if further expansion is needed, hardware upgrades or additional nodes can be added without issue.</p>
 <p>There were several challenges throughout this process that made the project more than simple direction following. These ranged from quick fixes to hours of troubleshooting. The first issue presented itself when installing the internal SSD, as physical space became a constraint. The Intel Wi-Fi card blocked the 2280 form factor of the drive due to its larger heatsink. After some research, I determined the card wasn’t critical to system functionality and removed it completely.</p>
 <p>Another challenge involved updating the firmware on the new NVMe drive, which was two generations behind. I initially attempted to boot into an Ubuntu image to verify the firmware version and flash the update. However, I ran into an issue where no display output appeared, stopping any confirmation of progress. After multiple attempts and determining that no changes had been made, I installed the drive into a secondary NVMe bay on my main desktop and used Samsung Magician to complete the update quickly. It is possible to perform this update directly on the host; however, using a second system was the most effective solution in this case.</p>

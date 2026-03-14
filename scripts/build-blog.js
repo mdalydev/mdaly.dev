@@ -39,6 +39,45 @@ function ensureDir(p) {
   fs.mkdirSync(p, { recursive: true });
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/**
+ * Adds classes to markdown-generated <img> tags.
+ *
+ * Usage in markdown:
+ * ![Normal image](/blog/images/example.png)
+ * ![Readable config screenshot|wide](/blog/images/example.png)
+ * ![Big diagram|full](/blog/images/example.png)
+ *
+ * Result:
+ * - normal => class="blog-image"
+ * - wide   => class="blog-image blog-image--wide"
+ * - full   => class="blog-image blog-image--full"
+ */
+function enhanceImages(html) {
+  return html.replace(/<img([^>]*?)alt="([^"]*?)"([^>]*?)>/gi, (match, pre, alt, post) => {
+    let cleanAlt = alt.trim();
+    let sizeClass = "blog-image";
+
+    if (cleanAlt.endsWith("|wide")) {
+      cleanAlt = cleanAlt.replace(/\|wide$/, "").trim();
+      sizeClass += " blog-image--wide";
+    } else if (cleanAlt.endsWith("|full")) {
+      cleanAlt = cleanAlt.replace(/\|full$/, "").trim();
+      sizeClass += " blog-image--full";
+    }
+
+    return `<img${pre}alt="${escapeHtml(cleanAlt)}"${post} class="${sizeClass}" loading="lazy">`;
+  });
+}
+
 function main() {
   console.log("== Blog build starting ==");
 
@@ -68,7 +107,8 @@ function main() {
     const outDir = path.join(BLOG_DIR, slug);
     ensureDir(outDir);
 
-    const contentHtml = marked.parse(body);
+    let contentHtml = marked.parse(body);
+    contentHtml = enhanceImages(contentHtml);
 
     const html = postTemplate
       .split("{{TITLE}}").join(title)
@@ -78,42 +118,35 @@ function main() {
     fs.writeFileSync(path.join(outDir, "index.html"), html);
     console.log(`Built: /blog/${slug}/`);
 
-     posts.push({ title, date, slug, description: meta.description || "" });
-
+    posts.push({
+      title,
+      date,
+      slug,
+      description: meta.description || ""
+    });
   }
 
-  // newest first (works well with YYYY-MM-DD)
   posts.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 
- const postsHtml =
-  posts.length === 0
-    ? `<div class="post"><div style="color: rgba(243,234,219,0.78);">No posts yet.</div></div>`
-    : posts
-        .map(
-          p => `
+  const postsHtml =
+    posts.length === 0
+      ? `<div class="post"><div style="color: rgba(243,234,219,0.78);">No posts yet.</div></div>`
+      : posts
+          .map(
+            p => `
 <div class="post">
   <div><a href="/blog/${p.slug}/">${escapeHtml(p.title)}</a></div>
   <div class="meta">${escapeHtml(p.date || "")}</div>
   ${p.description ? `<div class="desc">${escapeHtml(p.description)}</div>` : ""}
 </div>`.trim()
-        )
-        .join("\n");
-
+          )
+          .join("\n");
 
   const blogIndexHtml = blogIndexTemplate.replace("{{POSTS}}", postsHtml);
   fs.writeFileSync(path.join(BLOG_DIR, "index.html"), blogIndexHtml);
   console.log("Built: /blog/ (index)");
 
   console.log("== Blog build complete ==");
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 main();
