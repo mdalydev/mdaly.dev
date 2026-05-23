@@ -114,14 +114,7 @@ So I started experimenting with MCP servers after being introduced to them throu
 
 Without getting into too much detail, I was able to connect Claude to a DNS lookup tool through an MCP server running in my home lab.
 
-This allowed Claude to:
-- review DNS records
-- summarize issues
-- double check policies
-- identify things like:
-  - SPF lookup counts
-  - weak DKIM keys
-  - DMARC mismatches
+![Asking Claude what the Sendmarc MCP can do](/blog/images/askMCP.png)
 
 Initially, this worked perfectly.
 
@@ -156,6 +149,8 @@ This progression looked something like this:
 - Added priority flags
 - Removed features that cluttered up the Artifact
 - Improved organization repeatedly
+  
+  ![Task List Image](/blog/images/tasklist.png)
 
 Some features really helped and others sounded useful but really weren't. This is where my process became the most valuable. What became really interesting was that the tool wasn't the only thing getting better. Every time I used it, I became better at identifying things I wanted to improve further. Small inefficiencies that I would've ignored before became so obvious once I became the architect. The value wasn't only in the tool. It was in making the distance between a problem and a solution shorter. This has been a new skill, that I never knew I would need but I would emphasize now.
 

@@ -330,18 +330,7 @@
 <p>At first I used lookup tools and manual reviews, but once you&#39;re reviewing changes across 80+ domains, it becomes very hard to audit consistently without eventually overlooking something.</p>
 <p>So I started experimenting with MCP servers after being introduced to them through UAlbany&#39;s Cyber Defense Organization.</p>
 <p>Without getting into too much detail, I was able to connect Claude to a DNS lookup tool through an MCP server running in my home lab.</p>
-<p>This allowed Claude to:</p>
-<ul>
-<li>review DNS records</li>
-<li>summarize issues</li>
-<li>double check policies</li>
-<li>identify things like:<ul>
-<li>SPF lookup counts</li>
-<li>weak DKIM keys</li>
-<li>DMARC mismatches</li>
-</ul>
-</li>
-</ul>
+<p><img src="/blog/images/askMCP.png" alt="Asking Claude what the Sendmarc MCP can do" class="blog-image" loading="lazy"></p>
 <p>Initially, this worked perfectly.</p>
 <p>Then an attempt to scale showed another weakness.</p>
 <p>A full DNS health check across 400+ domains produces a massive amount of information.. believe it or not.</p>
@@ -360,13 +349,21 @@
 <p>Being new to remote work came with challenges that I didn&#39;t expect. One of these being organization. My notes became messy, tasks slipped my mind, got lost on the paper, or random thoughts had nowhere to go. At first, I used a very simple task list. Then over time I kept feeling like something was missing while using it. Progression was needed!</p>
 <p>This progression looked something like this:</p>
 <ul>
-<li>Simple task list</li>
-<li>Added subtasks</li>
-<li>Added expandable notes</li>
-<li>Added scratchpad area</li>
-<li>Added priority flags</li>
-<li>Removed features that cluttered up the Artifact</li>
-<li>Improved organization repeatedly</li>
+<li><p>Simple task list</p>
+</li>
+<li><p>Added subtasks</p>
+</li>
+<li><p>Added expandable notes</p>
+</li>
+<li><p>Added scratchpad area</p>
+</li>
+<li><p>Added priority flags</p>
+</li>
+<li><p>Removed features that cluttered up the Artifact</p>
+</li>
+<li><p>Improved organization repeatedly</p>
+<p><img src="/blog/images/tasklist.png" alt="Task List Image" class="blog-image" loading="lazy"></p>
+</li>
 </ul>
 <p>Some features really helped and others sounded useful but really weren&#39;t. This is where my process became the most valuable. What became really interesting was that the tool wasn&#39;t the only thing getting better. Every time I used it, I became better at identifying things I wanted to improve further. Small inefficiencies that I would&#39;ve ignored before became so obvious once I became the architect. The value wasn&#39;t only in the tool. It was in making the distance between a problem and a solution shorter. This has been a new skill, that I never knew I would need but I would emphasize now.</p>
 <h3>API Workflows</h3>
