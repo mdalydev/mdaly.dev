@@ -215,7 +215,37 @@
     .image-card.tall{
       grid-row: span 2;
       min-height: 392px;
+      position: relative;
     }
+
+    .featured-arrow{
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(243,234,219,0.32);
+      background: rgba(0,0,0,0.42);
+      color: rgba(243,234,219,0.95);
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+    }
+
+    .featured-arrow:hover{
+      background: rgba(0,0,0,0.62);
+      border-color: rgba(243,234,219,0.52);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .featured-arrow.left{ left: 14px; }
+    .featured-arrow.right{ right: 14px; }
 
     .image-card img{
       width: 100%;
@@ -391,7 +421,9 @@
 
     <div class="image-strip" aria-label="Personal and professional photos">
       <div class="image-card tall">
-        <img class="featured-photo" id="featuredPhoto" src="/Images/image-homepage/hike.jpeg" alt="Hiking in the mountains">
+        <img class="featured-photo" id="featuredPhoto" src="/Images/image-homepage/hike.jpeg" alt="Hiking in the mountains" style="object-position: 70% center;">
+        <button class="featured-arrow left" type="button" aria-label="Previous featured photo" onclick="changeFeaturedPhoto(-1)">‹</button>
+        <button class="featured-arrow right" type="button" aria-label="Next featured photo" onclick="changeFeaturedPhoto(1)">›</button>
       </div>
       <div class="image-card">
         <img src="/Images/image-homepage/boat.jpeg" alt="Port security experience on the water">
@@ -461,23 +493,47 @@
 
     const featuredPhoto = document.getElementById("featuredPhoto");
     const featuredImages = [
-      { src: "/Images/image-homepage/hike.jpeg", alt: "Hiking in the mountains" },
-      { src: "/Images/image-homepage/times.jpeg", alt: "Times Square with my girlfriend" }
+      {
+        src: "/Images/image-homepage/hike.jpeg",
+        alt: "Hiking in the mountains",
+        position: "70% center"
+      },
+      {
+        src: "/Images/image-homepage/times.jpeg",
+        alt: "Times Square with my girlfriend",
+        position: "center center"
+      }
     ];
     let featuredIndex = 0;
 
-    if (featuredPhoto) {
-      setInterval(() => {
-        featuredPhoto.classList.add("fade-out");
+    function updateFeaturedPhoto(){
+      if (!featuredPhoto) return;
+      const current = featuredImages[featuredIndex];
+      featuredPhoto.classList.add("fade-out");
 
-        setTimeout(() => {
-          featuredIndex = (featuredIndex + 1) % featuredImages.length;
-          featuredPhoto.src = featuredImages[featuredIndex].src;
-          featuredPhoto.alt = featuredImages[featuredIndex].alt;
-          featuredPhoto.classList.remove("fade-out");
-        }, 500);
-      }, 5200);
+      setTimeout(() => {
+        featuredPhoto.src = current.src;
+        featuredPhoto.alt = current.alt;
+        featuredPhoto.style.objectPosition = current.position;
+        featuredPhoto.classList.remove("fade-out");
+      }, 220);
     }
+
+    function changeFeaturedPhoto(direction){
+      featuredIndex += direction;
+
+      if (featuredIndex < 0) {
+        featuredIndex = featuredImages.length - 1;
+      }
+
+      if (featuredIndex >= featuredImages.length) {
+        featuredIndex = 0;
+      }
+
+      updateFeaturedPhoto();
+    }
+
+    updateFeaturedPhoto();
 
   </script>
 </body>
