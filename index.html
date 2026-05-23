@@ -228,43 +228,12 @@
     }
 
     .featured-photo{
-      transition: opacity 220ms ease, transform 260ms ease;
+      transition: opacity 500ms ease, transform 260ms ease;
     }
 
     .featured-photo.fade-out{
       opacity: 0;
     }
-
-    .featured-card{
-      position: relative;
-    }
-
-    .featured-arrow{
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
-      border: 1px solid rgba(243,234,219,0.20);
-      background: rgba(0,0,0,0.24);
-      color: rgba(243,234,219,0.88);
-      cursor: pointer;
-      font-size: 1.35rem;
-      line-height: 1;
-      display: grid;
-      place-items: center;
-      transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
-    }
-
-    .featured-arrow:hover{
-      background: rgba(0,0,0,0.38);
-      border-color: rgba(243,234,219,0.34);
-      transform: translateY(-50%) scale(1.04);
-    }
-
-    .featured-arrow-left{ left: 14px; }
-    .featured-arrow-right{ right: 14px; }
 
     .image-card:hover img{
       transform: scale(1.025);
@@ -421,22 +390,20 @@
     </div>
 
     <div class="image-strip" aria-label="Personal and professional photos">
-      <div class="image-card tall featured-card">
-        <img class="featured-photo" id="featuredPhoto" src="/images/image-homepage/hike.jpeg" alt="Hiking in the mountains">
-        <button class="featured-arrow featured-arrow-left" type="button" aria-label="Previous featured image">‹</button>
-        <button class="featured-arrow featured-arrow-right" type="button" aria-label="Next featured image">›</button>
+      <div class="image-card tall">
+        <img class="featured-photo" id="featuredPhoto" src="/Images/image-homepage/hike.jpeg" alt="Hiking in the mountains">
       </div>
       <div class="image-card">
-        <img src="/images/image-homepage/boat.jpeg" alt="Port security experience on the water">
+        <img src="/Images/image-homepage/boat.jpeg" alt="Port security experience on the water">
       </div>
       <div class="image-card">
-        <img src="/images/image-homepage/strat.jpeg" alt="Black electric guitar">
+        <img src="/Images/image-homepage/strat.jpeg" alt="Black electric guitar">
       </div>
       <div class="image-card">
-        <img src="/images/image-homepage/ocean.jpeg" alt="Coastal landscape">
+        <img src="/Images/image-homepage/ocean.jpeg" alt="Coastal landscape">
       </div>
       <div class="image-card">
-        <img src="/images/image-homepage/conc.jpeg" alt="Candlelight concert">
+        <img src="/Images/image-homepage/conc.jpeg" alt="Candlelight concert">
       </div>
     </div>
 
@@ -493,35 +460,23 @@
     });
 
     const featuredPhoto = document.getElementById("featuredPhoto");
-    const previousFeatured = document.querySelector(".featured-arrow-left");
-    const nextFeatured = document.querySelector(".featured-arrow-right");
     const featuredImages = [
-      { src: "/images/image-homepage/hike.jpeg", alt: "Hiking in the mountains", position: "70% center" },
-      { src: "/images/image-homepage/times.jpeg", alt: "Times Square with my girlfriend", position: "center center" }
+      { src: "/Images/image-homepage/hike.jpeg", alt: "Hiking in the mountains" },
+      { src: "/Images/image-homepage/times.jpeg", alt: "Times Square with my girlfriend" }
     ];
     let featuredIndex = 0;
 
-    function showFeaturedImage(direction){
-      if (!featuredPhoto) return;
-
-      featuredPhoto.classList.add("fade-out");
-
-      setTimeout(() => {
-        featuredIndex = (featuredIndex + direction + featuredImages.length) % featuredImages.length;
-        featuredPhoto.src = featuredImages[featuredIndex].src;
-        featuredPhoto.alt = featuredImages[featuredIndex].alt;
-        featuredPhoto.style.objectPosition = featuredImages[featuredIndex].position;
-        featuredPhoto.classList.remove("fade-out");
-      }, 220);
-    }
-
     if (featuredPhoto) {
-      featuredPhoto.style.objectPosition = featuredImages[featuredIndex].position;
-    }
+      setInterval(() => {
+        featuredPhoto.classList.add("fade-out");
 
-    if (previousFeatured && nextFeatured) {
-      previousFeatured.addEventListener("click", () => showFeaturedImage(-1));
-      nextFeatured.addEventListener("click", () => showFeaturedImage(1));
+        setTimeout(() => {
+          featuredIndex = (featuredIndex + 1) % featuredImages.length;
+          featuredPhoto.src = featuredImages[featuredIndex].src;
+          featuredPhoto.alt = featuredImages[featuredIndex].alt;
+          featuredPhoto.classList.remove("fade-out");
+        }, 500);
+      }, 5200);
     }
 
   </script>
