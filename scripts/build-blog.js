@@ -49,32 +49,31 @@ function escapeHtml(s) {
 }
 
 /**
- * Adds classes to markdown-generated <img> tags.
+ * Image sizing support from markdown alt text.
  *
- * Usage in markdown:
- * ![Normal image](/blog/images/example.png)
- * ![Readable config screenshot|wide](/blog/images/example.png)
- * ![Big diagram|full](/blog/images/example.png)
+ * Normal:
+ * ![My image](/blog/images/example.png)
  *
- * Result:
- * - normal => class="blog-image"
- * - wide   => class="blog-image blog-image--wide"
- * - full   => class="blog-image blog-image--full"
+ * Wide:
+ * ![My image|wide](/blog/images/example.png)
+ *
+ * Full:
+ * ![My image|full](/blog/images/example.png)
  */
 function enhanceImages(html) {
   return html.replace(/<img([^>]*?)alt="([^"]*?)"([^>]*?)>/gi, (match, pre, alt, post) => {
     let cleanAlt = alt.trim();
-    let sizeClass = "blog-image";
+    let className = "blog-image";
 
     if (cleanAlt.endsWith("|wide")) {
       cleanAlt = cleanAlt.replace(/\|wide$/, "").trim();
-      sizeClass += " blog-image--wide";
+      className += " blog-image--wide";
     } else if (cleanAlt.endsWith("|full")) {
       cleanAlt = cleanAlt.replace(/\|full$/, "").trim();
-      sizeClass += " blog-image--full";
+      className += " blog-image--full";
     }
 
-    return `<img${pre}alt="${escapeHtml(cleanAlt)}"${post} class="${sizeClass}" loading="lazy">`;
+    return `<img${pre}alt="${escapeHtml(cleanAlt)}"${post} class="${className}" loading="lazy">`;
   });
 }
 
