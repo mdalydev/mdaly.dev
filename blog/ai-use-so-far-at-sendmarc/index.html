@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>How I Use AI as an Early Career Email Security Analyst — Markham Daly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg: #5f6367;
+      --bg2: #565a5e;
+      --bg3: #6a6e72;
+
+      --text: #f3eadb;
+      --muted: rgba(243,234,219,0.78);
+      --accent: rgba(243,234,219,0.92);
+      --line: rgba(243,234,219,0.22);
+
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      color: var(--text);
+
+      background: var(--bg);
+
+      font-family: "Avenir Next", Avenir, "SF Pro Display", -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0.2px;
+
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+
+      position: relative;
+      isolation: isolate;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+
+      background:
+        radial-gradient(1600px 900px at 50% -30%, rgba(255,255,255,0.06), transparent 70%),
+        radial-gradient(1400px 900px at 80% 20%, rgba(255,255,255,0.04), transparent 72%);
+      opacity: 0.95;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(243,234,219,0.10);
+    }
+
+    .nav-wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .nav-link{
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.98rem;
+      padding: 6px 2px;
+      position: relative;
+      transition: color 140ms ease, transform 140ms ease;
+    }
+
+    .nav-link::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 1px;
+      background: rgba(243,234,219,0.0);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .nav-link:hover{
+      color: var(--accent);
+      transform: translateY(-1px);
+      text-shadow: 0 0 18px rgba(243,234,219,0.18);
+    }
+
+    .nav-link:hover::after{
+      transform: scaleX(1);
+      background: rgba(243,234,219,0.65);
+    }
+
+    .sep{
+      color: rgba(243,234,219,0.40);
+      user-select: none;
+      transform: translateY(-1px);
+    }
+
+    main{
+      flex: 1; 
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 74px 18px 46px;
+      text-align: center;
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(2.0rem, 3.2vw, 3.0rem);
+      font-weight: 650;
+      letter-spacing: 0.3px;
+    }
+
+    .meta{
+      margin: 12px auto 0;
+      color: rgba(243,234,219,0.70);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .divider{
+      width: 84px;
+      height: 1px;
+      background: rgba(243,234,219,0.50);
+      margin: 28px auto 26px;
+      opacity: 0.65;
+      border-radius: 999px;
+    }
+
+    article{
+      margin: 0 auto;
+      max-width: 82ch;
+      text-align: left;
+      color: rgba(243,234,219,0.84);
+      font-size: 1.02rem;
+    }
+
+    article h2, article h3{
+      margin-top: 26px;
+      color: rgba(243,234,219,0.92);
+    }
+
+    article a{
+      color: var(--accent);
+    }
+
+    article code{
+      background: rgba(243,234,219,0.08);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    article pre{
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(243,234,219,0.18);
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow: auto;
+    }
+
+    article img.blog-image{
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 28px auto;
+      border-radius: 8px;
+      border: 1px solid rgba(243,234,219,0.12);
+    }
+
+    article img.blog-image--wide{
+      width: min(1000px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    article img.blog-image--full{
+      width: min(1200px, 100vw - 40px);
+      max-width: none;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    footer{
+      margin-top: auto;
+      background: rgba(95,99,103,0.78);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(243,234,219,0.12);
+
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    footer a{
+      color: rgba(243,234,219,0.52);
+      text-decoration: none;
+    }
+
+    footer a:hover{
+      color: rgba(243,234,219,0.78);
+      text-shadow: 0 0 16px rgba(243,234,219,0.18);
+    }
+
+    @media (max-width: 520px){
+      main{ padding-top: 62px; }
+
+      article img.blog-image--wide,
+      article img.blog-image--full{
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a class="nav-link" href="/">Home</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/markham_daly.pdf" target="_blank" rel="noopener">Resume</a>
+      <span class="sep">|</span>
+      <a class="nav-link" href="/blog/">Blog</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>How I Use AI as an Early Career Email Security Analyst</h1>
+    <div class="meta">2026/05/23</div>
+
+    <div class="divider"></div>
+
+    <article>
+      <h1>Introduction</h1>
+<p>Although I haven&#39;t had a ton of time in my new role at Sendmarc as an Email Security Analyst, I have had some real work to do. This means I have to do two things at once.. learn and produce. </p>
+<p>This is perfect for me because it gives me the opportunity to make the most difference, find things that take a long time or don&#39;t require a ton of expertise, and free up others to do what they do best.</p>
+<p>Many of the tasks I get that aren&#39;t client facing or overly abstract can be done far easier with automation. This article walks through some of the ways I have partially offloaded or streamlined those processes with AI.</p>
+<p>I want to clarify something early on: I am not an AI engineer or a professional software developer. I am a new cybersecurity professional trying to add more value than my experience on its own would normally allow.</p>
+<p>Some of the most repetitive tasks I faced included:</p>
+<ul>
+<li>DNS lookups</li>
+<li>task tracking</li>
+<li>repetitive security tasks</li>
+<li>peer reviews</li>
+<li>organizing large amounts of data</li>
+</ul>
+<p>None of these tasks are especially difficult, but they take time, consistency, and accuracy.</p>
+<p>The more repetitive the work became, the more I found myself needing to add efficiency.</p>
+<h1>The Thought Process</h1>
+<p>I&#39;ve never gotten formal training on iterative processes, but I realized quickly that I was in a great spot.</p>
+<p>I don&#39;t really have limits on how quickly I can test and improve things I create, so I started using a very specific process whenever I found inefficiency in a large task.</p>
+<p>The process looks something like this:</p>
+<h3>1. Identify the Problem</h3>
+<p>I find something repetitive, slow, disorganized, or annoying enough that it feels like it could be improved.</p>
+<h3>2. Build a Rough Solution</h3>
+<p>Using AI I create a rough working version using things like:</p>
+<ul>
+<li>Python</li>
+<li>APIs</li>
+<li>Artifacts</li>
+<li>MCP tools</li>
+</ul>
+<p>The first version is usually not anything to write home about.</p>
+<h3>3. Use It Repeatedly</h3>
+<p>This is mandatory!</p>
+<p>I actually use the tool during work over and over again.</p>
+<h3>4. Find Friction</h3>
+<p>While using it, I notice:</p>
+<ul>
+<li>clutter</li>
+<li>inefficiency</li>
+<li>unnecessary information</li>
+<li>missing options</li>
+<li>things that just feel awkward</li>
+</ul>
+<p>This is definitely the most meaningful part of the process.</p>
+<h3>5. Improve the Workflow</h3>
+<p>I go back, make changes, remove things that don&#39;t help, and improve things that do.</p>
+<p>Sometimes the improvements are tiny and sometimes they completely change how useful the tool becomes.</p>
+<h3>6. Repeat</h3>
+<p>Over time the improvements become less obvious, and that&#39;s when I know the tool is actually useful.</p>
+<p>The important thing to understand is that this process is definitely not faster (initially) than just doing the work manually.</p>
+<p>But after enough iterations, this new solution becomes far better than the original process.</p>
+<h1>Examples</h1>
+<p>The easiest way to explain this process is through a few real examples from my day to day work.</p>
+<h3>DNS / MCP</h3>
+<p>Within my role, I don&#39;t only do email security work. I also get the opportunity to support some of the sales side.</p>
+<p>Part of that involves reviewing potential customer domains using DNS information.</p>
+<p>Things like:</p>
+<ul>
+<li>MX providers</li>
+<li>DMARC policies</li>
+<li>DKIM configurations</li>
+</ul>
+<p>This information gets organized into files where it can later be sorted, filtered, and analyzed to highlight organizations that are in need of DMARC or DMARC improvement.</p>
+<p>The problem was that the process was repetitive and often lacked specific advice because manually reviewing large numbers of domains takes a lot of time. It&#39;s one thing to do 10 domains but 400.. is something else.</p>
+<p>Another major time sink was peer reviews.</p>
+<p>A huge part of Customer Success work involves making changes to customer accounts:</p>
+<ul>
+<li>DMARC policies</li>
+<li>percentages</li>
+<li>rua + ruf addresses</li>
+<li>policy configurations</li>
+</ul>
+<p>And there are an incredible number of small things that can be missed.</p>
+<p>At first I used lookup tools and manual reviews, but once you&#39;re reviewing changes across 80+ domains, it becomes very hard to audit consistently without eventually overlooking something.</p>
+<p>So I started experimenting with MCP servers after being introduced to them through UAlbany&#39;s Cyber Defense Organization.</p>
+<p>Without getting into too much detail, I was able to connect Claude to a DNS lookup tool through an MCP server running in my home lab.</p>
+<p>This allowed Claude to:</p>
+<ul>
+<li>review DNS records</li>
+<li>summarize issues</li>
+<li>double check policies</li>
+<li>identify things like:<ul>
+<li>SPF lookup counts</li>
+<li>weak DKIM keys</li>
+<li>DMARC mismatches</li>
+</ul>
+</li>
+</ul>
+<p>Initially, this worked perfectly.</p>
+<p>Then an attempt to scale showed another weakness.</p>
+<p>A full DNS health check across 400+ domains produces a massive amount of information.. believe it or not.</p>
+<p>At that point, more information stopped being useful because it was drowned out by DNS fluff.</p>
+<p>So instead of using full DNS lookups, I added functions to hone in on the fields I cared about most:</p>
+<ul>
+<li>DMARC policy</li>
+<li>SPF lookup count</li>
+<li>MX provider</li>
+<li>RUA address</li>
+</ul>
+<p>Removing unnecessary information made the tool faster and more useful.</p>
+<p>My goal in all of this wasn&#39;t to automate the way I thought or give that control over to AI. It was to find the ways AI can streamline the work I can do. Just slowly. </p>
+<p>It has been really exciting using my own MCP server because it gives me the ability to automate tasks in ways I couldn&#39;t do with Claude&#39;s sandbox environment.</p>
+<h3>Task List / Workflow Design</h3>
+<p>Being new to remote work came with challenges that I didn&#39;t expect. One of these being organization. My notes became messy, tasks slipped my mind, got lost on the paper, or random thoughts had nowhere to go. At first, I used a very simple task list. Then over time I kept feeling like something was missing while using it. Progression was needed!</p>
+<p>This progression looked something like this:</p>
+<ul>
+<li>Simple task list</li>
+<li>Added subtasks</li>
+<li>Added expandable notes</li>
+<li>Added scratchpad area</li>
+<li>Added priority flags</li>
+<li>Removed features that cluttered up the Artifact</li>
+<li>Improved organization repeatedly</li>
+</ul>
+<p>Some features really helped and others sounded useful but really weren&#39;t. This is where my process became the most valuable. What became really interesting was that the tool wasn&#39;t the only thing getting better. Every time I used it, I became better at identifying things I wanted to improve further. Small inefficiencies that I would&#39;ve ignored before became so obvious once I became the architect. The value wasn&#39;t only in the tool. It was in making the distance between a problem and a solution shorter. This has been a new skill, that I never knew I would need but I would emphasize now.</p>
+<h3>API Workflows</h3>
+<p>As one would expect, my job also involves spending a lot of time inside customer accounts on the Sendmarc platform. Many of my tasks were repetitive operational actions. However, the platform already had APIs built for many of these functions.</p>
+<p>So instead of manually doing repetitive processes over and over again, I started experimenting with API based tools.</p>
+<p>Using API documentation and Claude, I created small tools that could</p>
+<ul>
+<li>view DMARC policies</li>
+<li>review sender information</li>
+<li>inspect RUA/RUF addresses</li>
+<li>validate policy changes</li>
+<li>double check account configurations</li>
+</ul>
+<p>These definitely weren&#39;t massive engineering projects. They were small improvements reducing repetitive manual work.</p>
+<p>Of course, security wasn&#39;t forgotten throughout the process. API keys were never shared, always given limited permissions and removed after use.</p>
+<h1>Nuance</h1>
+<p>One thing I think is important to clarify is that AI is most valuable when it improves, not when it replaces.</p>
+<p>I still need to understand:</p>
+<ul>
+<li>DNS</li>
+<li>DMARC</li>
+<li>email authentication</li>
+<li>security risks</li>
+<li>customer environments</li>
+</ul>
+<p>AI does not replace that knowledge, but, It can reduce repetitive work and shorten the time between:</p>
+<ul>
+<li>identifying a problem</li>
+<li>testing a solution</li>
+<li>improving a workflow</li>
+</ul>
+<p>Really well.</p>
+<p>That&#39;s where I&#39;ve found the most value. I wasn&#39;t trying to have AI tell me what to do and regurgitate answers. I wanted to have it boost what I&#39;m good at while helping me improve where I&#39;m not.</p>
+<h1>Conclusion</h1>
+<p>AI has been incredibly valuable for me, not just for speeding up repetitive work, but for changing how I think about workflows entirely.</p>
+<p>Instead of accepting that some processes are slow, I ask myself how can this be faster, better, more accurate..  Knowing I have tools to back up those questions and the answers I come up with.</p>
+<p>Being in my early career, with so much to learn, I think these lessons and changes in the way I think has been the most valuable part of all of this.</p>
+<p>More than improving a tool, AI has helped me learn faster, iterate toward better solutions and improve the way I work.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <a href="/mitty/" target="_blank" rel="noopener">© 2026 Markham Daly</a>
+  </footer>
+</body>
+</html>
